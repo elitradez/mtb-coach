@@ -1,4 +1,4 @@
-import { validateVideoFile, buildClipReadiness, demoAnalysis } from './src/mvp.js';
+import { validateVideoFile, buildClipReadiness, buildFallbackMailto, demoAnalysis } from './src/mvp.js';
 
 const $ = (selector) => document.querySelector(selector);
 const upload = $('#clip');
@@ -81,8 +81,36 @@ for (const link of document.querySelectorAll('[data-scroll]')) {
   });
 }
 
-$('#waitlist-form').addEventListener('submit', () => {
+$('#waitlist-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const submit = form.querySelector('button[type="submit"]');
+  const status = $('#form-status');
+  submit.disabled = true;
+  submit.textContent = 'Joining…';
+  status.textContent = '';
   track('waitlist_submitted', { level: $('#level').value, skill: $('#skill').value });
+
+  try {
+    const endpoint = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`Waitlist service returned ${response.status}`);
+    window.location.assign('thanks.html');
+  } catch {
+    const fallback = buildFallbackMailto({
+      email: $('#email').value,
+      level: $('#level').value,
+      skill: $('#skill').value,
+    });
+    status.innerHTML = `The form service is temporarily unavailable. <a href="${fallback}">Send your waitlist request by email instead.</a>`;
+    submit.disabled = false;
+    submit.textContent = 'Try joining again';
+    track('waitlist_fallback_shown');
+  }
 });
 
 readiness();

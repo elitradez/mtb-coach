@@ -19,7 +19,7 @@ Open `http://localhost:4173`.
 
 ## Waitlist
 
-The production form uses the founder's activated FormSubmit endpoint and redirects to `thanks.html` on the published GitHub Pages URL. Fields are intentionally minimal: email, riding level, bunny-hop problem, and optional social handle.
+The production form uses the founder's activated FormSubmit endpoint and redirects to `thanks.html` on the published GitHub Pages URL. Fields are intentionally minimal: email, riding level, bunny-hop problem, and optional social handle. If the form provider is unavailable, the UI exposes a prefilled email fallback to `eli-launchcreative@agentmail.to` instead of losing the submission silently.
 
 ## Validation events
 

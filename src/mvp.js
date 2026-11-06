@@ -22,6 +22,12 @@ export function buildClipReadiness(protocol) {
   return { ready: completed === fields.length, completed, total: fields.length };
 }
 
+export function buildFallbackMailto({ email, level, skill }) {
+  const subject = 'Join the MTB Coach founding rider beta';
+  const body = `Please add me to the MTB Coach waitlist.\n\nEmail: ${email}\nRiding level: ${level}\nHardest bunny-hop issue: ${skill}`;
+  return `mailto:eli-launchcreative@agentmail.to?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export const demoAnalysis = Object.freeze({
   isFixture: true,
   label: 'Example analysis preview — not generated from your clip',

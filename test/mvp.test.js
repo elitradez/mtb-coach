@@ -4,6 +4,7 @@ import {
   validateWaitlistEmail,
   validateVideoFile,
   buildClipReadiness,
+  buildFallbackMailto,
   demoAnalysis,
 } from '../src/mvp.js';
 
@@ -33,6 +34,13 @@ test('requires the complete side-on filming protocol', () => {
     total: 4,
   });
   assert.equal(buildClipReadiness({ sideOn: true, fullRider: false, stable: true, daylight: true }).ready, false);
+});
+
+test('builds an encoded email fallback when the waitlist service is unavailable', () => {
+  const url = buildFallbackMailto({ email: 'rider@example.com', level: 'Intermediate', skill: 'Rear wheel lift' });
+  assert.match(url, /^mailto:eli-launchcreative@agentmail\.to\?/);
+  assert.match(url, /rider%40example\.com/);
+  assert.match(url, /Rear%20wheel%20lift/);
 });
 
 test('demo analysis is explicitly labeled as a preview fixture', () => {
