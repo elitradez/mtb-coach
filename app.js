@@ -93,11 +93,19 @@ $('#waitlist-form').addEventListener('submit', async (event) => {
 
   try {
     const endpoint = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { Accept: 'application/json' },
-    });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
+    let response;
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+    } finally {
+      window.clearTimeout(timeout);
+    }
     if (!response.ok) throw new Error(`Waitlist service returned ${response.status}`);
     window.location.assign('thanks.html');
   } catch {
