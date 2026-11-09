@@ -4,194 +4,387 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Maiden: AI coaching for mountain bikers</title>
-<meta name="description" content="Upload a clip of your wheelie or bunny hop. Maiden scores every phase of the move and tells you the one thing to fix on your next ride. Frame by frame tracking for wheelies, manuals, bunny hops and more.">
+<meta name="description" content="Film your wheelie or bunny hop. Maiden scores every phase of the move and tells you the one thing to fix on your next ride.">
 <meta name="theme-color" content="#000000">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#000}
-a{color:#2FBF71}a:hover{color:#5AD08F}
-h1,h2,h3{font-family:'Playfair Display',Georgia,serif}
+:root{
+  --bg:#000000; --surface:#0E0E0E; --surface-2:#161616; --line:#242424; --line-2:#333333;
+  --text:#FFFFFF; --muted:#A3A3A3; --subtle:#8C8C8C;
+  --jade:#2FBF71; --jade-ink:#04140C; --jade-soft:rgba(47,191,113,.14);
+  --cream:#F3EFE6; --ink:#0A0A0A; --ink-muted:#4A4A4A;
+  --serif:'Playfair Display',Georgia,serif; --sans:Inter,system-ui,-apple-system,sans-serif;
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:28px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:var(--jade)}
+h1,h2,h3{margin:0;font-family:var(--serif);font-weight:700;letter-spacing:-.5px}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:120px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--jade)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--jade)}
+.h2{font-size:clamp(40px,5vw,64px);line-height:1.04}
+.lead{font-size:19px;line-height:1.55;color:var(--muted);max-width:560px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:12px;border:0;font:inherit;font-weight:600;font-size:16px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn-primary{background:var(--jade);color:var(--jade-ink)}
+.btn-primary:hover{background:#3DD08A}
+.btn-light{background:var(--text);color:var(--ink)}
+.btn-dark{background:var(--ink);color:var(--text)}
+.btn:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--jade);outline-offset:3px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:68px;flex-wrap:wrap}
+.logo{font-family:var(--serif);font-weight:800;font-size:28px;letter-spacing:-.5px;color:var(--text);text-decoration:none}
+.logo span{color:var(--jade)}
+.nav-links{display:flex;align-items:center;gap:28px;font-size:15px;font-weight:500}
+.nav-links a{color:#E5E5E5;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav-links .btn{min-height:44px;padding:0 18px;font-size:15px;color:var(--ink)}
+@media (max-width:760px){.nav-links a:not(.btn){display:none}}
+
+/* hero */
+.hero{padding:88px 0 104px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px;align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:24px}
+.pill{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);font-size:14px;font-weight:500;color:#E5E5E5}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--jade);box-shadow:0 0 0 4px var(--jade-soft)}
+.hero h1{font-size:clamp(52px,7vw,92px);line-height:.98;letter-spacing:-1.5px}
+.hero h1 em{font-style:normal;color:var(--jade)}
+.hero .lead{font-size:21px}
+.signup{display:flex;flex-wrap:wrap;gap:10px;max-width:520px;margin-top:8px}
+.signup input{flex:1 1 240px;min-height:52px;padding:0 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:16px}
+.signup input::placeholder{color:var(--subtle)}
+.micro{font-size:14px;color:var(--subtle)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* phone */
+.stage{position:relative;display:flex;justify-content:center}
+.stage::before{content:"";position:absolute;inset:8% -10% 0;background:radial-gradient(closest-side,rgba(47,191,113,.22),transparent 70%);z-index:0}
+.phone{position:relative;z-index:1;width:320px;border-radius:48px;padding:10px;background:#1A1A1A;border:1px solid #2E2E2E;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.screen{border-radius:38px;overflow:hidden;background:var(--bg)}
+.app-top{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 12px;font-size:13px}
+.app-top b{font-weight:600}
+.app-top span{color:var(--subtle)}
+.clip{position:relative;aspect-ratio:4/5;background:#1A1A1A}
+.clip img{width:100%;height:100%;object-fit:cover}
+.clip svg{position:absolute;inset:0;width:100%;height:100%}
+.chip{position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.72);font-size:12px;font-weight:600}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--jade)}
+.app-body{padding:14px 18px 20px;display:flex;flex-direction:column;gap:10px}
+.timeline{display:flex;gap:3px;height:8px}
+.timeline span{border-radius:2px;background:#2A2A2A}
+.timeline .on{background:var(--jade)}
+.score-row{display:flex;justify-content:space-between;align-items:flex-end;padding-top:6px}
+.score-row small{display:block;font-size:12px;color:var(--subtle)}
+.score-row strong{font-size:17px;font-weight:600}
+.score-big{font-family:var(--serif);font-weight:800;font-size:48px;line-height:.9;color:var(--jade)}
+.fix{font-size:13px;line-height:1.45;color:#D4D4D4;padding:10px 12px;border-radius:10px;background:var(--surface-2)}
+.fix b{color:var(--text)}
+.float{position:absolute;z-index:2;background:rgba(14,14,14,.92);border:1px solid var(--line-2);border-radius:var(--r-md);padding:12px 14px;font-size:13px;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.float small{display:block;color:var(--subtle);font-size:12px}
+.float strong{font-size:20px;font-weight:700}
+.float.a{left:-8px;top:22%}
+.float.b{right:-4px;bottom:16%}
+.float .up{color:var(--jade)}
+@media (max-width:960px){.hero .wrap{grid-template-columns:1fr}.float.a{left:0}.float.b{right:0}}
+
+/* strip */
+.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.strip .wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.strip div{padding:28px 24px;display:flex;flex-direction:column;gap:4px}
+.strip div+div{border-left:1px solid var(--line)}
+.strip b{font-size:17px;font-weight:600}
+.strip span{font-size:15px;color:var(--muted)}
+@media (max-width:760px){.strip .wrap{grid-template-columns:1fr}.strip div+div{border-left:0;border-top:1px solid var(--line)}}
+
+/* how */
+.head{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;display:flex;flex-direction:column;gap:16px;min-height:280px}
+.step .n{font-family:var(--serif);font-weight:800;font-size:44px;line-height:1;color:var(--jade)}
+.step h3{font-size:28px}
+.step p{color:var(--muted);font-size:16px}
+.step .visual{margin-top:auto;border-radius:var(--r-md);background:var(--surface-2);border:1px solid var(--line);padding:16px;font-size:13px;color:var(--muted)}
+.frame-guide{display:flex;align-items:center;gap:12px}
+.frame-guide .box{width:72px;height:48px;border:2px dashed var(--jade);border-radius:8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}
+.frame-guide .box i{width:44px;height:2px;background:var(--line-2)}
+.mini-bars{display:flex;flex-direction:column;gap:8px}
+.mini-bars div{display:grid;grid-template-columns:64px 1fr 24px;gap:10px;align-items:center}
+.mini-bars em{font-style:normal;height:6px;border-radius:3px;background:#2A2A2A;overflow:hidden;display:block}
+.mini-bars em span{display:block;height:100%;background:var(--jade);border-radius:3px}
+.mini-bars b{color:var(--text);text-align:right;font-weight:600}
+@media (max-width:960px){.steps{grid-template-columns:1fr}.step{min-height:0}}
+
+/* deep dive */
+.dive{background:var(--cream);color:var(--ink)}
+.dive .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:72px;align-items:center}
+.dive .eyebrow{color:#1E8E55}
+.dive .eyebrow .dot{background:#1E8E55}
+.dive .lead{color:var(--ink-muted)}
+.checks{list-style:none;margin:32px 0 0;padding:0;display:flex;flex-direction:column;gap:16px}
+.checks li{display:flex;gap:14px;align-items:flex-start;font-size:17px}
+.checks svg{flex:0 0 auto;margin-top:2px}
+.checks b{display:block;font-weight:600}
+.checks span{color:var(--ink-muted);font-size:16px}
+.card{background:var(--bg);color:var(--text);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 30px 60px rgba(10,10,10,.18)}
+.card .clip{aspect-ratio:4/5}
+.card .body{padding:22px 24px 24px;display:flex;flex-direction:column}
+.phase-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--subtle)}
+.phase-meta b{color:var(--text);font-weight:600}
+.labels{display:flex;justify-content:space-between;font-size:12px;color:var(--subtle);margin-top:6px}
+.overall{display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.overall small{display:block;font-size:13px;color:var(--subtle)}
+.overall h3{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:0}
+.overall .score-big{font-size:60px}
+.row{display:grid;grid-template-columns:1fr 120px 36px;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid #1C1C1C;font-size:15px}
+.row em{display:block;height:6px;border-radius:3px;background:#262626;overflow:hidden}
+.row em span{display:block;height:100%;border-radius:3px;background:var(--jade)}
+.row b{text-align:right;font-weight:700}
+.row.low em span{background:#F2B544}
+.card .fix{margin-top:16px;font-size:14px}
+@media (max-width:960px){.dive .wrap{grid-template-columns:1fr;gap:48px}}
+
+/* skills */
+.skills-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.skill{position:relative;border-radius:var(--r-lg);overflow:hidden;min-height:520px;display:flex;flex-direction:column;justify-content:flex-end;padding:28px;border:1px solid var(--line);background:var(--surface)}
+.skill img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.8}
+.skill::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 18%,rgba(0,0,0,0) 60%)}
+.skill>*{position:relative;z-index:1}
+.skill .tag{position:absolute;top:24px;left:28px;z-index:1;font-size:12px;font-weight:600;color:var(--jade-ink);background:var(--jade);padding:6px 10px;border-radius:999px}
+.skill h3{font-size:44px}
+.skill p{color:#D4D4D4;max-width:360px;margin-top:8px}
+.skill .phases{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.skill .phases span{font-size:13px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.22);color:#E5E5E5}
+.next{margin-top:40px;display:flex;flex-direction:column;gap:16px}
+.next h3{font-family:var(--sans);font-size:18px;font-weight:600;letter-spacing:0}
+.next ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.next li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 22px;border-radius:var(--r-md);border:1px dashed var(--line-2)}
+.next li b{font-family:var(--serif);font-size:24px;font-weight:700;color:#D4D4D4}
+.next li span{font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:5px 10px}
+.next p{font-size:15px;color:var(--subtle)}
+@media (max-width:760px){.skills-grid,.next ul{grid-template-columns:1fr}.skill{min-height:300px}}
+
+
+/* faq */
+.faq .wrap{max-width:840px}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0;font-size:19px;font-weight:600}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:26px;font-weight:400;color:var(--jade);line-height:1}
+details[open] summary::after{content:"\2212"}
+details p{padding:0 0 24px;color:var(--muted);font-size:17px;max-width:680px}
+
+/* cta + footer */
+.cta{padding:0 0 120px}
+.cta-box{background:var(--jade);color:var(--jade-ink);border-radius:var(--r-xl);padding:72px 56px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between}
+.cta-box h2{font-size:clamp(40px,5vw,64px);line-height:1.02;max-width:640px}
+.cta-box p{font-size:18px;margin-top:12px;color:#0B3A22}
+@media (max-width:760px){.cta-box{padding:48px 28px}}
+footer{border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px;font-size:14px;color:var(--subtle)}
+footer .logo{font-size:22px}
+footer nav{display:flex;gap:24px}
+footer nav a{color:var(--subtle);text-decoration:none}
+@media (max-width:760px){.float{display:none}.signup .btn{flex:1 1 100%}.hero{padding:56px 0 72px}.section{padding:80px 0}.phone{width:300px}}
 </style>
-<style>*{box-sizing:border-box} html{scroll-behavior:smooth}</style>
 </head>
 <body>
-<div style="background: #000000; color: #FFFFFF; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
 
-  <header style="border-bottom: 1px solid #1F1F1F">
-    <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px; min-height: 68px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
-      <a href="#top" aria-label="Maiden home" style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 26px; letter-spacing: 0; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; gap: 10px"><svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true" style="display: block"><polyline points="14,80 32,22 50,62 68,22 86,80" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"></polyline><circle cx="14" cy="80" r="9" fill="#2FBF71"></circle><circle cx="32" cy="22" r="9" fill="#2FBF71"></circle><circle cx="50" cy="62" r="9" fill="#2FBF71"></circle><circle cx="68" cy="22" r="9" fill="#2FBF71"></circle><circle cx="86" cy="80" r="9" fill="#2FBF71"></circle></svg><span>Maiden</span></a>
-      <nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px; font-size: 15px; font-weight: 500">
-        <a href="#how" style="color: #E5E5E5; text-decoration: none">How it works</a>
-        <a href="#skills" style="color: #E5E5E5; text-decoration: none">Skills</a>
-        <a href="#waitlist" style="background: #FFFFFF; color: #000000; font-weight: 600; text-decoration: none; padding: 0 18px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center; border-radius: 10px">Join waitlist</a>
-      </nav>
-    </div>
-  </header>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Maiden home">Maiden<span>.</span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#skills">Skills</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-light" href="#join">Join waitlist</a>
+    </nav>
+  </div>
+</header>
 
-  <section id="top" style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 104px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
-    <div style="flex: 1 1 540px; display: flex; flex-direction: column; gap: 24px">
-      <h1 style="margin: 0; font-size: clamp(48px, 7vw, 92px); line-height: 1.04; font-weight: 700; letter-spacing: -1px">Film it. Fix it. <span style="color: #2FBF71">Send it.</span></h1>
-      <p style="margin: 0; font-size: 21px; line-height: 1.45; color: #A1A1A1; max-width: 500px">Upload a clip of your wheelie or bunny hop. Maiden scores every phase of the move and tells you the one thing to fix on your next ride.</p>
-      <form id="waitlist" style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 520px; margin-top: 8px">
-        <label for="email" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Email address</label>
-        <input id="email" type="email" placeholder="Email address" style="flex: 1 1 250px; min-height: 52px; box-sizing: border-box; padding: 0 16px; border: 1px solid #333333; border-radius: 12px; background: #111111; color: #FFFFFF; font: inherit; font-size: 16px">
-        <button type="submit" style="flex: 0 0 auto; min-height: 52px; padding: 0 24px; border: 0; border-radius: 12px; background: #2FBF71; color: #04140C; font: inherit; font-weight: 600; font-size: 16px; cursor: pointer">Get early access</button>
-      </form>
-      <p style="margin: 0; font-size: 14px; color: #8A8A8A">Founding riders get in first. No spam, just your invite.</p>
-    </div>
-    <div style="flex: 1 1 340px; min-width: 0; max-width: 460px; aspect-ratio: 9 / 14; background: #111111; border-radius: 16px; overflow: hidden">
-      <video src="trail.mp4" poster="trail-poster.jpg" autoplay="" muted="" loop="" playsinline="" aria-label="Rider coming down a mountain trail" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
-    </div>
-  </section>
-
-  <section id="how" style="background: #F3EFE6; color: #000000">
-    <div style="max-width: 1240px; margin: 0 auto; padding: 112px 24px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
-      <div style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 20px">
-        <h2 style="margin: 0; font-size: clamp(40px, 5vw, 64px); line-height: 1.02; font-weight: 700; letter-spacing: -0.5px">See exactly where it falls apart.</h2>
-        <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #4A4A4A; max-width: 460px">Maiden tracks your body and your bike frame by frame, then scores each phase. No more rewatching clips trying to figure out what went wrong.</p>
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span>Waitlist open · Launching with wheelie and bunny hop</span>
+        <h1>Film it. Fix it.<br><em>Send it.</em></h1>
+        <p class="lead">Upload a clip of your wheelie or bunny hop. Maiden scores every phase of the move and tells you the one thing to fix on your next ride.</p>
+        <form class="signup" id="join">
+          <label class="sr" for="email">Email address</label>
+          <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
+          <button class="btn btn-primary" type="submit">Get early access</button>
+        </form>
+        <p class="micro">Be first to know when it opens. No spam.</p>
       </div>
-      <div style="flex: 1 1 460px; min-width: 0; background: #000000; color: #FFFFFF; border-radius: 16px; overflow: hidden">
-        <div style="position: relative; aspect-ratio: 4 / 5; background: #1A1A1A">
-          <img src="rider.jpg" alt="Rider in the air off a dirt jump, with pose tracking lines over the body and bike" style="width: 100%; height: 100%; object-fit: cover; display: block">
-          <svg viewBox="0 0 800 1000" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%">
-            <line x1="265" y1="490" x2="565" y2="615" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="10 8" opacity="0.9"></line>
-            <line x1="265" y1="490" x2="420" y2="490" stroke="#FFFFFF" stroke-width="2" opacity="0.6"></line>
-            <polyline points="450,135 470,200 545,320" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"></polyline>
-            <polyline points="470,200 550,170 630,140 735,110" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"></polyline>
-            <polyline points="470,200 440,290 395,335" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"></polyline>
-            <polyline points="545,320 440,375 410,525" fill="none" stroke="#2FBF71" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"></polyline>
-            <polyline points="545,320 515,430 520,575" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"></polyline>
-            <circle cx="545" cy="320" r="11" fill="#2FBF71" stroke="#FFFFFF" stroke-width="3"></circle>
-            <circle cx="440" cy="375" r="11" fill="#2FBF71" stroke="#FFFFFF" stroke-width="3"></circle>
-            <circle cx="410" cy="525" r="11" fill="#2FBF71" stroke="#FFFFFF" stroke-width="3"></circle>
-            <circle cx="470" cy="200" r="7" fill="#FFFFFF"></circle>
-            <circle cx="630" cy="140" r="7" fill="#FFFFFF"></circle>
-            <circle cx="440" cy="290" r="7" fill="#FFFFFF"></circle>
-            <circle cx="515" cy="430" r="7" fill="#FFFFFF"></circle>
-            <circle cx="265" cy="490" r="7" fill="#FFFFFF"></circle>
-            <circle cx="565" cy="615" r="7" fill="#FFFFFF"></circle>
-            <g font-family="Inter, sans-serif" font-size="26" font-weight="600">
-              <rect x="590" y="300" width="92" height="44" rx="22" fill="#000000" opacity="0.75"></rect>
-              <text x="636" y="330" fill="#FFFFFF" text-anchor="middle">96°</text>
-              <rect x="300" y="352" width="104" height="44" rx="22" fill="#000000" opacity="0.75"></rect>
-              <text x="352" y="382" fill="#FFFFFF" text-anchor="middle">118°</text>
-              <rect x="150" y="430" width="92" height="44" rx="22" fill="#000000" opacity="0.75"></rect>
-              <text x="196" y="460" fill="#FFFFFF" text-anchor="middle">23°</text>
-            </g>
-          </svg>
-          <span style="position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.7); color: #FFFFFF; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 999px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2FBF71"></span>Pop</span>
-        </div>
-        <div style="padding: 20px 24px 0; display: flex; flex-direction: column; gap: 10px">
-          <div style="display: flex; justify-content: space-between; font-size: 13px; color: #9A9A9A"><span style="color: #FFFFFF; font-weight: 600">Pop · 3/5</span><span>Frame 31/75</span></div>
-          <div style="display: flex; gap: 4px; height: 10px">
-            <div style="flex: 3; background: #2A2A2A; border-radius: 3px"></div>
-            <div style="flex: 2; background: #3A3A3A; border-radius: 3px"></div>
-            <div style="flex: 1.2; background: #2FBF71; border-radius: 3px"></div>
-            <div style="flex: 3; background: #2A2A2A; border-radius: 3px"></div>
-            <div style="flex: 1.5; background: #3A3A3A; border-radius: 3px"></div>
+      <div class="stage">
+        <div class="float a"><small>Return</small><strong>64</strong> <small>Your weakest phase</small></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="app-top"><b>Jump</b><span>Session 4</span></div>
+            <div class="clip">
+              <img src="jump.jpg" alt="Rider whipping a jump on a forest trail with pose tracking lines">
+              <svg viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="298" y1="268" x2="300" y2="315" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="300" y1="315" x2="232" y2="335" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="300" y1="315" x2="368" y2="342" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="232" y1="335" x2="222" y2="432" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="222" y1="432" x2="240" y2="500" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="368" y1="342" x2="388" y2="398" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="388" y1="398" x2="392" y2="472" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="232" y1="335" x2="285" y2="470" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="368" y1="342" x2="350" y2="470" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="285" y1="470" x2="350" y2="470" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="350" y1="470" x2="405" y2="560" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><line x1="405" y1="560" x2="468" y2="612" stroke="#2FBF71" stroke-width="6" stroke-linecap="round"/><circle cx="300" cy="315" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="232" cy="335" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="368" cy="342" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="222" cy="432" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="240" cy="500" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="388" cy="398" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="392" cy="472" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="285" cy="470" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="350" cy="470" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="405" cy="560" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/><circle cx="468" cy="612" r="9" fill="#FFFFFF" stroke="#2FBF71" stroke-width="3"/></svg>
+              <span class="chip"><i></i>Return</span>
+            </div>
+            <div class="app-body">
+              <div class="timeline"><span style="flex:2"></span><span style="flex:2.5"></span><span class="on" style="flex:1.2"></span><span style="flex:1.6"></span></div>
+              <div class="score-row"><div><small>Overall score</small><strong>Big whip, late return</strong></div><div class="score-big">76</div></div>
+              <p class="fix"><b>Fix:</b> Start bringing the bike back straight at the peak so you land in line.</p>
+            </div>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 12px; color: #8A8A8A"><span>Approach</span><span>Load</span><span>Pop</span><span>Air</span><span>Land</span></div>
-        </div>
-        <div style="padding: 24px; display: flex; flex-direction: column">
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 16px; border-bottom: 1px solid #262626">
-            <div style="display: flex; flex-direction: column; gap: 4px">
-              <span style="font-size: 13px; color: #9A9A9A">Bunny hop · Session 6</span>
-              <h3 style="margin: 0; font-size: 22px; font-weight: 700">Overall score</h3>
-            </div>
-            <span style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 60px; line-height: 0.9; letter-spacing: 0; color: #2FBF71">76</span>
-          </div>
-          
-            <div style="display: grid; grid-template-columns: 1fr 120px 40px; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1C1C1C">
-              <span style="font-size: 15px; font-weight: 500">Load</span>
-              <div style="height: 6px; border-radius: 3px; background: #262626; overflow: hidden">
-                <div style="height: 6px; border-radius: 3px; background: #2FBF71; width: 81%"></div>
-              </div>
-              <span style="font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 18px; text-align: right">81</span>
-            </div>
-          
-            <div style="display: grid; grid-template-columns: 1fr 120px 40px; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1C1C1C">
-              <span style="font-size: 15px; font-weight: 500">Pop</span>
-              <div style="height: 6px; border-radius: 3px; background: #262626; overflow: hidden">
-                <div style="height: 6px; border-radius: 3px; background: #2FBF71; width: 64%"></div>
-              </div>
-              <span style="font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 18px; text-align: right">64</span>
-            </div>
-          
-            <div style="display: grid; grid-template-columns: 1fr 120px 40px; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1C1C1C">
-              <span style="font-size: 15px; font-weight: 500">Air</span>
-              <div style="height: 6px; border-radius: 3px; background: #262626; overflow: hidden">
-                <div style="height: 6px; border-radius: 3px; background: #2FBF71; width: 77%"></div>
-              </div>
-              <span style="font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 18px; text-align: right">77</span>
-            </div>
-          
-            <div style="display: grid; grid-template-columns: 1fr 120px 40px; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #1C1C1C">
-              <span style="font-size: 15px; font-weight: 500">Landing</span>
-              <div style="height: 6px; border-radius: 3px; background: #262626; overflow: hidden">
-                <div style="height: 6px; border-radius: 3px; background: #2FBF71; width: 86%"></div>
-              </div>
-              <span style="font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 18px; text-align: right">86</span>
-            </div>
-          
-          <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.5; color: #C4C4C4"><strong style="color: #FFFFFF; font-weight: 600">Fix:</strong> You're popping off your arms. Drive through your legs first, then pull the bars to your hips.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="skills" style="max-width: 1240px; margin: 0 auto; padding: 112px 24px; display: flex; flex-direction: column; gap: 40px">
-    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
-      <h2 style="margin: 0; font-size: clamp(40px, 5vw, 64px); line-height: 1.02; font-weight: 700; letter-spacing: -0.5px">From one skill to the next. Ride like the pros.</h2>
-      <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #A1A1A1; max-width: 600px">We're starting with the two skills every rider wants first. Nail those, and the next ones will be waiting.</p>
-    </div>
-    <ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px">
-      <li style="background: #111111; border: 1px solid #2FBF71; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 28px">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><span style="font-size: 14px; font-weight: 600; color: #8A8A8A">01</span><span style="font-size: 12px; font-weight: 600; color: #04140C; background: #2FBF71; padding: 5px 10px; border-radius: 999px">At launch</span></div>
-        <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700">Wheelie</span><span style="font-size: 15px; line-height: 1.5; color: #A1A1A1">Find your balance point and hold it longer every session.</span></div>
-      </li>
-      <li style="background: #111111; border: 1px solid #2FBF71; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 28px">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px"><span style="font-size: 14px; font-weight: 600; color: #8A8A8A">02</span><span style="font-size: 12px; font-weight: 600; color: #04140C; background: #2FBF71; padding: 5px 10px; border-radius: 999px">At launch</span></div>
-        <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700">Bunny hop</span><span style="font-size: 15px; line-height: 1.5; color: #A1A1A1">Get both wheels up, clear more, and land it clean.</span></div>
-      </li>
-    </ol>
-    <div style="display: flex; flex-direction: column; gap: 14px">
-      <h3 style="margin: 0; font-size: 22px; font-weight: 700">Up next</h3>
-      <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
-      <li style="border: 1px dashed #2E2E2E; border-radius: 14px; padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
-        <span style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #CFCFCF">Manual</span><span style="font-size: 12px; font-weight: 600; color: #A1A1A1; border: 1px solid #3A3A3A; padding: 5px 10px; border-radius: 999px">Coming soon</span>
-      </li>
-      <li style="border: 1px dashed #2E2E2E; border-radius: 14px; padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
-        <span style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #CFCFCF">Drops</span><span style="font-size: 12px; font-weight: 600; color: #A1A1A1; border: 1px solid #3A3A3A; padding: 5px 10px; border-radius: 999px">Coming soon</span>
-      </li>
-      <li style="border: 1px dashed #2E2E2E; border-radius: 14px; padding: 20px 22px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
-        <span style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #CFCFCF">Jumps</span><span style="font-size: 12px; font-weight: 600; color: #A1A1A1; border: 1px solid #3A3A3A; padding: 5px 10px; border-radius: 999px">Coming soon</span>
-      </li>
-      </ul>
-      <p style="margin: 4px 0 0; font-size: 15px; color: #8A8A8A">Founding riders help pick what we build next.</p>
+  <section class="strip" aria-label="What you get">
+    <div class="wrap">
+      <div><b>Every phase scored</b><span>From load to landing, frame by frame</span></div>
+      <div><b>One fix, not ten</b><span>The single change that matters most</span></div>
+      <div><b>Just your phone</b><span>No sensors, no coach, no guessing</span></div>
     </div>
   </section>
 
-  <section style="max-width: 1240px; margin: 0 auto; padding: 0 24px 104px">
-    <div style="background: #2FBF71; color: #04140C; border-radius: 20px; padding: 64px 48px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; justify-content: space-between">
-      <h2 style="margin: 0; font-size: clamp(36px, 4.5vw, 56px); line-height: 1.02; font-weight: 700; letter-spacing: -0.5px">Your first clip is all it takes.</h2>
-      <a href="#waitlist" style="background: #000000; color: #FFFFFF; font-weight: 600; font-size: 16px; text-decoration: none; padding: 0 26px; min-height: 52px; box-sizing: border-box; display: inline-flex; align-items: center; border-radius: 12px">Join the waitlist</a>
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow"><span class="dot"></span>How it works</span>
+        <h2 class="h2">Three steps to a better hop.</h2>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <span class="n">01</span>
+          <h3>Film it</h3>
+          <p>Prop your phone up side-on and ride through the frame. The app shows you exactly where to stand.</p>
+          <div class="visual frame-guide"><div class="box"><i></i></div><span>Side-on, full bike in frame, phone steady</span></div>
+        </article>
+        <article class="step">
+          <span class="n">02</span>
+          <h3>Get your score</h3>
+          <p>Maiden tracks your body and bike through every phase and scores each one out of 100.</p>
+          <div class="visual mini-bars">
+            <div><span>Load</span><em><span style="width:81%"></span></em><b>81</b></div>
+            <div><span>Pop</span><em><span style="width:64%"></span></em><b>64</b></div>
+            <div><span>Landing</span><em><span style="width:86%"></span></em><b>86</b></div>
+          </div>
+        </article>
+        <article class="step">
+          <span class="n">03</span>
+          <h3>Fix it</h3>
+          <p>Get one clear fix and a drill for your next session. Film again and watch the score climb.</p>
+          <div class="visual"><b style="color:#fff">Drill:</b> Ten hops off a curb, pulling the bars to your hips before the rear lifts.</div>
+        </article>
+      </div>
     </div>
   </section>
 
-  <footer style="border-top: 1px solid #1F1F1F">
-    <div style="max-width: 1240px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #8A8A8A">
-      <span>© 2026 Maiden</span>
-      <span>usemaiden.com</span>
+  <section class="section dive">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Frame by frame</span>
+        <h2 class="h2" style="margin-top:16px">See exactly where it falls apart.</h2>
+        <p class="lead" style="margin-top:20px">No more rewatching clips trying to figure out what went wrong. Maiden breaks the move into phases and shows you the one that's holding you back.</p>
+        <ul class="checks">
+          <li><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1E8E55"/><path d="m7 12.5 3.2 3L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Body and bike tracking</b><span>Hips, knees, arms and bike angle on every frame</span></div></li>
+          <li><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1E8E55"/><path d="m7 12.5 3.2 3L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>A score for every phase</b><span>Compared against clean reps from strong riders</span></div></li>
+          <li><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1E8E55"/><path d="m7 12.5 3.2 3L17 9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><b>Coaching written by riders</b><span>Every fix and drill comes from people who ride</span></div></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="clip">
+          <img src="corner.jpg" alt="Rider cornering on a dirt trail with pose tracking lines and joint angles">
+          <svg viewBox="0 0 800 999" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><line x1="432" y1="92" x2="360" y2="168" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="360" y1="168" x2="405" y2="178" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="360" y1="168" x2="262" y2="188" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="405" y1="178" x2="418" y2="255" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="418" y1="255" x2="495" y2="368" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="262" y1="188" x2="300" y2="305" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="300" y1="305" x2="355" y2="358" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="360" y1="168" x2="212" y2="300" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="212" y1="300" x2="298" y2="452" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><line x1="298" y1="452" x2="268" y2="625" stroke="#2FBF71" stroke-width="5" stroke-linecap="round"/><circle cx="360" cy="168" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="405" cy="178" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="418" cy="255" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="495" cy="368" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="262" cy="188" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="300" cy="305" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="355" cy="358" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="212" cy="300" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="298" cy="452" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><circle cx="268" cy="625" r="8" fill="#FFFFFF" stroke="#2FBF71" stroke-width="2"/><rect x="318" y="262" width="94" height="46" rx="23" fill="#000000" fill-opacity="0.78"/><text x="365.0" y="293" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="26" font-weight="600" text-anchor="middle">152°</text><rect x="96" y="278" width="94" height="46" rx="23" fill="#000000" fill-opacity="0.78"/><text x="143.0" y="309" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="26" font-weight="600" text-anchor="middle">102°</text><rect x="320" y="430" width="94" height="46" rx="23" fill="#000000" fill-opacity="0.78"/><text x="367.0" y="461" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="26" font-weight="600" text-anchor="middle">141°</text></svg>
+          <span class="chip"><i></i>Turn-in</span>
+        </div>
+        <div class="body">
+          <div class="phase-meta"><b>Turn-in · 2 of 4</b><span>Frame 48 / 120</span></div>
+          <div class="timeline" style="margin-top:10px"><span style="flex:2"></span><span class="on" style="flex:1.4"></span><span style="flex:2"></span><span style="flex:2"></span></div>
+          <div class="labels"><span>Entry</span><span>Turn-in</span><span>Apex</span><span>Exit</span></div>
+          <div class="overall"><div><small>Cornering · Session 2</small><h3>Overall score</h3></div><div class="score-big">76</div></div>
+          <div class="row"><span>Entry</span><em><span style="width:82%"></span></em><b>82</b></div>
+          <div class="row low"><span>Turn-in</span><em><span style="width:64%"></span></em><b>64</b></div>
+          <div class="row"><span>Apex</span><em><span style="width:77%"></span></em><b>77</b></div>
+          <div class="row"><span>Exit</span><em><span style="width:86%"></span></em><b>86</b></div>
+          <p class="fix"><b>Fix:</b> Your arms and legs are almost straight. Bend your elbows and knees and drop your hips so the bike can move under you.</p>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
-</div>
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow"><span class="dot"></span>Skills</span>
+        <h2 class="h2">From one skill to the next. Ride like the pros.</h2>
+        <p class="lead">We're starting with the two skills every rider wants first. Nail those, and the next ones will be waiting.</p>
+      </div>
+      <div class="skills-grid">
+        <article class="skill">
+          <img src="wheelie.jpg" alt="">
+          <span class="tag">At launch</span>
+          <h3>Wheelie</h3>
+          <p>Find your balance point and hold it longer every session.</p>
+          <div class="phases"><span>Lift</span><span>Balance point</span><span>Hold</span><span>Exit</span></div>
+        </article>
+        <article class="skill">
+          <img src="rider.jpg" alt="">
+          <span class="tag">At launch</span>
+          <h3>Bunny hop</h3>
+          <p>Get both wheels up, clear more, and land it clean.</p>
+          <div class="phases"><span>Load</span><span>Pop</span><span>Air</span><span>Landing</span></div>
+        </article>
+      </div>
+      <div class="next">
+        <h3>Up next</h3>
+        <ul>
+          <li><b>Manual</b><span>Coming soon</span></li>
+          <li><b>Drops</b><span>Coming soon</span></li>
+          <li><b>Jumps</b><span>Coming soon</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="head"><span class="eyebrow"><span class="dot"></span>FAQ</span><h2 class="h2">Questions riders ask.</h2></div>
+      <details><summary>What do I need?</summary><p>Just your phone and your bike. Prop the phone up side-on, a few meters away, so your whole bike and body are in frame. The app walks you through it.</p></details>
+      <details><summary>Which skills can I work on?</summary><p>Wheelies and bunny hops at launch. Manuals, drops and jumps are next.</p></details>
+      <details><summary>I can't wheelie at all yet. Is it for me?</summary><p>Yes. Your first clips will score low, and that's the point. Every session shows you the next thing to work on, from your very first lift.</p></details>
+      <details><summary>When can I use it?</summary><p>We're opening to the waitlist first, ahead of riding season. Join and you'll get an email the moment your spot opens.</p></details>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <div class="cta-box">
+        <div><h2>Your first clip is all it takes.</h2><p>Join the waitlist and be first to ride with Maiden.</p></div>
+        <a class="btn btn-dark" href="#join">Join the waitlist</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top">Maiden<span>.</span></a>
+    <nav aria-label="Footer"><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#faq">FAQ</a></nav>
+    <span>© 2026 Maiden · usemaiden.com</span>
+  </div>
+</footer>
+
 <script>
-document.getElementById('waitlist').addEventListener('submit',function(e){e.preventDefault();var b=this.querySelector('button');b.textContent="Waitlist opening soon";b.disabled=true;});
+document.getElementById('join').addEventListener('submit',function(e){e.preventDefault();var b=this.querySelector('button');b.textContent='Waitlist opening soon';b.disabled=true;});
 </script>
 </body>
 </html>
