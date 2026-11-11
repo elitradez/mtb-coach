@@ -212,6 +212,8 @@ footer nav{display:flex;gap:24px}
 footer nav a{color:var(--subtle);text-decoration:none}
 @media (max-width:760px){.float{display:none}.signup .btn{flex:1 1 100%}.hero{padding:56px 0 72px}.section{padding:80px 0}.phone{width:300px}}
 </style>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -393,7 +395,7 @@ f.addEventListener('submit',function(e){
   b.disabled=true;b.textContent='Joining...';
   fetch(URL,{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:location.search.slice(0,64)||'site'})})
   .then(function(r){
-    if(r.ok||r.status===409){b.textContent="You're on the list";i.value='';i.disabled=true;return;}
+    if(r.ok||r.status===409){window.va&&window.va('event',{name:'Signup'});b.textContent="You're on the list";i.value='';i.disabled=true;return;}
     throw new Error(r.status);
   }).catch(function(){b.disabled=false;b.textContent='Try again';});
 });
