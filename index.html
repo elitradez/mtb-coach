@@ -385,7 +385,19 @@ footer nav a{color:var(--subtle);text-decoration:none}
 </footer>
 
 <script>
-document.getElementById('join').addEventListener('submit',function(e){e.preventDefault();var b=this.querySelector('button');b.textContent='Waitlist opening soon';b.disabled=true;});
+(function(){
+var URL='https://bzvzwxstzripeoddmcpr.supabase.co/rest/v1/waitlist',KEY='sb_publishable_IVWik-lHKuJL8JldgJG5qg_8dWBqT5W';
+var f=document.getElementById('join'),b=f.querySelector('button'),i=document.getElementById('email'),label=b.textContent;
+f.addEventListener('submit',function(e){
+  e.preventDefault();var email=i.value.trim();if(!email)return;
+  b.disabled=true;b.textContent='Joining...';
+  fetch(URL,{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({email:email,source:location.search.slice(0,64)||'site'})})
+  .then(function(r){
+    if(r.ok||r.status===409){b.textContent="You're on the list";i.value='';i.disabled=true;return;}
+    throw new Error(r.status);
+  }).catch(function(){b.disabled=false;b.textContent='Try again';});
+});
+})();
 </script>
 </body>
 </html>
